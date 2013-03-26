@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title></title>
+    <script type="text/javascript" src="declare.js"></script>
+	<script type="text/javascript">
+		var A = declare("a.b.c" ,null, {
+			a : "",
+			b : "",
+			c : "",
+
+			constructor : function(a, b, c){
+				// declare.lang.mixin(this, {});
+				this.a = a;
+				this.b = b;
+				this.c = c;
+			}
+		});
+
+		window.aa = new declare.ns.a.b.c("a", "b", "c");
+		console.dir(aa)
+		//window.aa = new A("a", "b", "c");
+
+		var B = declare(null, {
+			
+			name : "this B name",
+
+			constructor : function(name){
+				this.name = name;
+			}
+
+		}); 
+
+		// window.bb = new B({
+		// 	name : "this is B name"
+		// });
+
+		var C = declare([A, B], {
+			
+			age : 0,
+
+			constructor : function(a, b, c, name, age){
+				//this.inherited(arguments, ["1", "2"]);
+				this.age = age;
+			}
+
+		}); 
+
+		//window.cc = new C("a", "b", "c", "name", 18);
+
+
+	</script>
+</head>
+<body>
+</body>
+</html>
