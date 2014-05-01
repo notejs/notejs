@@ -593,4 +593,4 @@
 	declare.lang = lang;
 	window.declare = declare;
 	//return declare;
-})(window, undefined);
+})(window);
