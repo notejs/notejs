@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>ajax proxy</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="keywords" content="">
+<meta name="description" content="">
+<script src="//cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+</head>
+<body>
+<script>
+document.domain = 'mojijs.com';
+var _proxyPage = null;
+function _proxy(type, url, data, success, complete, error){
+    var path = '//token.mojijs.com:81';
+    if (!_proxyPage) {
+        //还没有插入 iframe
+        _proxyPage = document.createElement('iframe');
+        _proxyPage.setAttribute('src', path + '/ajaxproxy.html');
+        _proxyPage.style.display = 'none';
+        $('body').append(_proxyPage);
+    }
+    //加载完毕以后执行
+    $(_proxyPage).on('load', function(){
+        var XMLHTTPRequest = _proxyPage.contentWindow.getTransport();
+        data = $.param(data);
+        if(type == 'GET'){
+            //去掉GET缓存
+            url += (url.indexOf('?')!=-1) ? '&_=' : '?_=';
+            url += new Date().getTime();
+            if(data){
+                url += '&' + data;
+            }
+        }
+        XMLHTTPRequest.onreadystatechange = function(){
+            if(XMLHTTPRequest.readyState == 4){
+                complete && complete.call(XMLHTTPRequest);
+                if(XMLHTTPRequest.status == 200){
+                    var data = JSON.parse(XMLHTTPRequest.responseText);
+                    if(data.response){
+                        data = data.response;
+                        if(data.code != undefined && data.code == 0){
+                            success.call(XMLHTTPRequest, data);
+                        }else{
+                            error && error.call(XMLHTTPRequest, data);
+                        }
+                    }else{
+                        error && error.call(XMLHTTPRequest, {
+                            code : -1,
+                            msg : '网络错误'
+                        });
+                    }
+                }else{
+                    //HTTP error
+                    error && error.call(XMLHTTPRequest, {code :-1,msg:'网络错误'});
+                }
+            }
+        };
+        XMLHTTPRequest.open(type , url, true);
+        if(type == 'GET'){
+            XMLHTTPRequest.send();
+        }
+        if(type == 'POST'){
+            XMLHTTPRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            XMLHTTPRequest.send(data);
+        }
+        setTimeout(function(){
+            XMLHTTPRequest.abort();
+        }, 60000); 
+    });
+}
+
+// test
+
+_proxy('POST', 'ajaxproxy.json', {
+    yt: 'aaa' 
+}, function success(data){
+    console.log(data);
+}, function complete(data){
+    console.log(data);
+}, function error(error){
+    console.log(error)
+});
+
+</script>
+</body>
+</html>

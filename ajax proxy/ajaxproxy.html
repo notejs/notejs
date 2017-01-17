@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">    
+    <meta http-equiv="expires" content="wed, 26 feb 2997 08:21:57 GMT">
+    <meta http-equiv="cache-control" content="Public, max-age=36000">
+    <script>
+        try{
+            document.domain = window.location.hostname.split('.').reverse().slice(0,2).reverse().join('.');
+        }catch(e){
+
+        }
+        window.getTransport = function(){
+            try{
+                try{
+                    return new ActveXObject( 'Msxml2.XMLHTTP' );
+                }catch(e){
+                    return new ActiveXObject( 'Microsoft.XMLHTTP' );
+                }
+            }catch(e){
+                return new XMLHttpRequest();
+            }
+        };
+    </script>
+</head>
+<body>
+</body>
+</html>
