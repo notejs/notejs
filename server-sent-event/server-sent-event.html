@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>server sent event</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="keywords" content="">
+<meta name="description" content="">
+
+</head>
+<body>
+
+</body>
+<script>
+	if(typeof EventSource !== 'undefined'){
+        var es = new EventSource('server-sent-event.php', {withCredentials: true});
+
+        console.log(es);
+
+        es.addEventListener('open', function(evt){
+           console.log(evt); 
+           console.log(es.CONNECTING, es.OPEN, es.CLOSED, es.readyState);
+        });
+        es.addEventListener('message', function(evt){
+            document.body.innerHTML = ['<div>', evt.data,'</div>'].join('');
+            console.log(es.CONNECTING, es.OPEN, es.CLOSED, es.readyState); 
+        });
+        es.addEventListener('error', function(evt){
+            console.log(evt);
+            console.log(es.CONNECTING, es.OPEN, es.CLOSED, es.readyState);
+        });
+        // setTimeout(function(){
+        //     es.close();
+        // }, 2000);
+    }else{
+        alert('不支持Event Source');
+    }
+</script>
+</html>
